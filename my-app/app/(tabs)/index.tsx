@@ -1,16 +1,32 @@
 import React from 'react';
-import { View, Text, TextInput, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Image, TouchableOpacity, ScrollView, StatusBar, Linking } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
 export default function HomeScreen() {
+
+// Fonction pour ouvrir un lien
+const openLink = (url: string) => {
+  Linking.openURL(url).catch((err) => console.error("Couldn't load page", err));
+};
+
   return (
     <View style={styles.container}>
-      {/* Utilisation de ScrollView pour rendre tout le contenu scrollable */}
+      <StatusBar barStyle="light-content" backgroundColor="#000" />
+
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Header Section with Logo and Title */}
+        {/* Header Section with Croissant-shaped Circle */}
         <View style={styles.header}>
-          <View style={styles.logoContainer}>
-            <Image source={require('../../assets/images/logo.png')} style={styles.logo} />
+          <View style={styles.outerCircleContainer}>
+            <View style={styles.outerCircle}>
+              <View style={styles.innerCircle}>
+                <Image source={require('../../assets/images/logo.png')} style={styles.logo} />
+              </View>
+            </View>
+          </View>
+
+          {/* Title Section */}
+          <View style={styles.titleContainer}>
             <Text style={styles.festivalTitle}>PUNCHLINE FEST</Text>
             <Text style={styles.festivalDates}>12.07.2024 - 14.07.2024</Text>
           </View>
@@ -27,32 +43,52 @@ export default function HomeScreen() {
         </View>
 
         {/* Concert Image */}
-        <View>
+        <View style={styles.concertContainer}>
           <Image source={require('../../assets/images/concert.png')} style={styles.concertImage} />
         </View>
 
-        {/* Festival Description */}
+        {/* Festival Description under concert image */}
         <Text style={styles.description}>
           TROIS JOURS DE RAP NON-STOP. DEUX SCÈNES MAJEURES, DES DIZAINES D'ARTISTES EN LIVE,
           DES BATTLES DE FREESTYLE ÉPIQUES ET BIEN PLUS ENCORE !
         </Text>
 
-        {/* Festival Map Section */}
+        {/* Map Section with two overlays */}
         <View style={styles.mapContainer}>
           {/* Image de la carte */}
           <Image source={require('../../assets/images/map.png')} style={styles.mapImage} />
 
-          {/* Texte superposé "Carte du festival" */}
-          <TouchableOpacity style={styles.overlayButton}>
-            <Text style={styles.overlayButtonText}>Carte du festival</Text>
+          {/* Bouton "Carte du festival" */}
+          <TouchableOpacity style={styles.mapButton}>
+            <Text style={styles.mapButtonText}>Carte du festival</Text>
           </TouchableOpacity>
+
+          {/* Texte descriptif superposé */}
+          <View style={styles.descriptionContainer}>
+            <Text style={styles.descriptionText}>
+              Retrouvez tous les évènements et bien plus encore !
+            </Text>
+
+            {/* Bouton fléché à droite */}
+            <TouchableOpacity style={styles.arrowButton}>
+              <Ionicons name="chevron-forward" size={24} color="black" />
+            </TouchableOpacity>
+          </View>
         </View>
 
         {/* Social Media Icons */}
         <View style={styles.socialContainer}>
-          <Ionicons name="logo-instagram" size={30} color="#fff" />
-          <Ionicons name="logo-x" size={30} color="#fff" />
-          <Ionicons name="logo-tiktok" size={30} color="#fff" />
+          <TouchableOpacity onPress={() => openLink('https://www.instagram.com')}>
+            <Ionicons name="logo-instagram" size={30} color="#fff" />
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => openLink('https://www.twitter.com')}>
+            <FontAwesome6 name="x-twitter" size={24} color="white" />
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => openLink('https://www.tiktok.com')}>
+            <Ionicons name="logo-tiktok" size={30} color="#fff" />
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </View>
@@ -63,25 +99,55 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
+    paddingTop: StatusBar.currentHeight || 20,  // Gérer la barre de statut
     padding: 20,
   },
   scrollContent: {
-    paddingBottom: 80,  // Pour éviter que les éléments ne se chevauchent avec la barre de navigation
+    paddingBottom: 80, // Pour éviter que les éléments ne se chevauchent avec la barre de navigation
   },
   header: {
+    flexDirection: 'row', // Aligner le logo à côté du texte
     alignItems: 'center',
+    justifyContent: 'flex-start', // Le texte doit être à droite du logo
     marginBottom: 20,
   },
-  logoContainer: {
+  outerCircleContainer: {
+    position: 'relative',
+    width: 180,  // Taille du conteneur du cercle extérieur
+    height: 180,
+    overflow: 'hidden',  // Pour couper une partie du cercle
+  },
+  outerCircle: {
+    position: 'absolute',
+    width: 180,  // Réduction de la taille du cercle
+    height: 180,
+    borderRadius: 100,  // Cercle extérieur
+    backgroundColor: '#BEB8AC',
+    justifyContent: 'center',
+    alignItems: 'center',
+    left: -55,  // Déplace le cercle encore plus à gauche pour créer l'effet coupé
+    top: -75,    // Légèrement décalé vers le haut
+  },
+  innerCircle: {
+    width: 100, // Taille du cercle intérieur
+    height: 100,
+    borderRadius: 50, // Cercle intérieur
+    backgroundColor: '#FFFFFF', // Couleur du cercle intérieur (blanc)
+    justifyContent: 'center',
     alignItems: 'center',
   },
   logo: {
-    width: 100, // ajuste selon la taille de ton image
-    height: 100,
-    marginBottom: 10,
+    width: 70, // Ajuste selon la taille du logo
+    height: 70,
+  },
+  titleContainer: {
+    flex: 1,
+    justifyContent: 'center', // Centrer verticalement le texte
+    alignItems: 'flex-start', // Aligner le texte à droite du logo
+    marginLeft: 20, // Ajouter de l'espace entre le logo et le texte
   },
   festivalTitle: {
-    fontSize: 24,
+    fontSize: 22, // Taille du texte "PUNCHLINE FEST"
     fontWeight: 'bold',
     color: '#fff',
   },
@@ -105,40 +171,61 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
   },
+  concertContainer: {
+    alignItems: 'center', // Centrer l'image de concert
+    marginBottom: 20,
+  },
   concertImage: {
     width: '100%',
-    height: 200, // ajuste selon la taille de l'image
+    height: 200,
     borderRadius: 10,
-    marginBottom: 20,
   },
   description: {
     color: '#fff',
     textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: 70,
   },
   mapContainer: {
+    position: 'relative', // Utilisé pour positionner les éléments en superposition
     alignItems: 'center',
     marginBottom: 20,
-    position: 'relative', // Assure que les éléments positionnés en absolu sont relatifs à ce conteneur
   },
   mapImage: {
     width: '100%',
-    height: 150,
+    height: 200,
     borderRadius: 10,
-    marginBottom: 10,
   },
-  overlayButton: {
-    position: 'absolute', // Positionnement absolu au-dessus de l'image
-    top: '40%', // Ajuste cette valeur pour placer correctement le bouton
-    backgroundColor: '#C4B299', // Fond beige comme dans la maquette
-    borderRadius: 10,
-    paddingVertical: 10,
+  mapButton: {
+    position: 'absolute',
+    left: 20,
+    top: -10, // Ajuste cette valeur selon tes besoins
+    backgroundColor: '#BEB8AC', 
     paddingHorizontal: 20,
+    paddingVertical: 8,
+    borderRadius: 10,
   },
-  overlayButtonText: {
+  mapButtonText: {
     color: '#000',
     fontWeight: 'bold',
-    textAlign: 'center',
+  },
+  descriptionContainer: {
+    position: 'absolute',
+    bottom: 10, // Positionné en bas de la carte
+    backgroundColor: '#BEB8AC', 
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 10,
+    width: '90%', // Occupe une bonne partie de la largeur de la carte
+  },
+  descriptionText: {
+    flex: 1,
+    color: '#000',
+    fontWeight: 'bold',
+  },
+  arrowButton: {
+    marginLeft: 10, // Espace entre le texte et la flèche
   },
   socialContainer: {
     flexDirection: 'row',
