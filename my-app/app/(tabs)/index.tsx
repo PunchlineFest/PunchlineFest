@@ -4,11 +4,10 @@ import { Ionicons } from '@expo/vector-icons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
 export default function HomeScreen() {
-
-// Fonction pour ouvrir un lien
-const openLink = (url: string) => {
-  Linking.openURL(url).catch((err) => console.error("Couldn't load page", err));
-};
+  // Fonction pour ouvrir un lien
+  const openLink = (url: string) => {
+    Linking.openURL(url).catch((err) => console.error("Couldn't load page", err));
+  };
 
   return (
     <View style={styles.container}>
@@ -189,6 +188,7 @@ const styles = StyleSheet.create({
     position: 'relative', // Utilisé pour positionner les éléments en superposition
     alignItems: 'center',
     marginBottom: 20,
+    position: 'relative', // Assure que les éléments positionnés en absolu sont relatifs à ce conteneur
   },
   mapImage: {
     width: '100%',
@@ -203,10 +203,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 8,
     borderRadius: 10,
-  },
-  mapButtonText: {
-    color: '#000',
-    fontWeight: 'bold',
   },
   descriptionContainer: {
     position: 'absolute',
