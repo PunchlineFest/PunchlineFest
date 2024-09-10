@@ -46,11 +46,10 @@ export default function HomeScreen() {
       {/* Social Media Icons */}
       <View style={styles.socialContainer}>
         <Ionicons name="logo-instagram" size={30} color="#fff" />
-        <Ionicons name="logo-x" size={30} color="#fff" />
+        <Ionicons name="logo-twitter" size={30} color="#fff" />
         <Ionicons name="logo-tiktok" size={30} color="#fff" />
       </View>
 
-      {/* Bottom Navigation Bar */}
       
     </View>
   );
