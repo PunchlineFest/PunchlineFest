@@ -53,23 +53,7 @@ export default function NotificationsScreen() {
     setModalVisible(false);
   };
 
-  // Fonction pour programmer une notification de test
-  const scheduleTestNotification = async () => {
-    const hasPermission = await requestNotificationPermission();
-    if (!hasPermission) return;
-
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title: 'Test Notification',
-        body: 'Ceci est une notification de test.',
-      },
-      trigger: { seconds: 3 }, // Déclenche la notification après 3 secondes
-    }).then(() => {
-      console.log("Notification programmée avec succès !");
-    }).catch((error) => {
-      console.error("Erreur lors de la planification de la notification", error);
-    });
-  };
+  
 
   // Fonction pour activer ou désactiver les notifications
   const toggleSwitch = () => setIsReminderEnabled(previousState => !previousState);
@@ -156,14 +140,6 @@ export default function NotificationsScreen() {
             </Text>
           </TouchableOpacity>
         ))}
-
-        {/* Bouton pour tester la notification */}
-        <TouchableOpacity
-          style={styles.testButton}
-          onPress={scheduleTestNotification}
-        >
-          <Text style={styles.testButtonText}>Recevoir une notification de test</Text>
-        </TouchableOpacity>
 
         {/* Modal pour choisir le délai de notification */}
         {selectedEvent && (
