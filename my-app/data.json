@@ -1,0 +1,254 @@
+{
+  "2024-07-14": [
+    {
+      "id": 320,
+      "name": "Atelier de Breakdance",
+      "date": "2024-07-14T20:07:15+02:00",
+      "category": "rap",
+      "type": "atelier",
+      "description": "Iste aspernatur est tempora blanditiis aut magnam adipisci officia. Nihil architecto aliquid itaque velit quasi veritatis quas sequi. Aperiam quaerat reiciendis iure aut exercitationem.",
+      "address": "",
+      "coordinates": [
+        43.260028,
+        5.380611
+      ],
+      "artists": [
+        {
+          "id": 536,
+          "name": "Vald",
+          "category": "r'n'b",
+          "description": "Vald est un rappeur français connu pour son humour noir, ses paroles provocatrices et son approche décalée du rap.",
+          "updatedAt": null,
+          "createdAt": "2024-09-11T11:25:41+02:00"
+        },
+        {
+          "id": 537,
+          "name": "PNL",
+          "category": "rap",
+          "description": "PNL est un duo de rappeurs français composé des frères Ademo et N.O.S, ils sont connus pour leurs textes introspectifs et leur style cloud rap.",
+          "updatedAt": null,
+          "createdAt": "2024-09-11T11:25:41+02:00"
+        },
+        {
+          "id": 538,
+          "name": "Heuss L’Enfoiré",
+          "category": "r'n'b",
+          "description": "Heuss L’Enfoiré est un rappeur français, célèbre pour son style décomplexé et ses punchlines humoristiques.",
+          "updatedAt": null,
+          "createdAt": "2024-09-11T11:25:41+02:00"
+        }
+      ],
+      "updatedAt": null,
+      "createdAt": "2024-09-11T11:25:41+02:00"
+    },
+    {
+      "id": 321,
+      "name": "Conférence",
+      "date": "2024-07-14T20:07:15+02:00",
+      "category": "hip-hop",
+      "type": "conférence",
+      "description": "Ut voluptate non animi reiciendis qui in quis. Dicta voluptatem quidem vero hic fuga veritatis. Quia accusamus porro eos et eos ut non. Porro qui nobis molestiae suscipit consectetur.",
+      "address": "",
+      "coordinates": [
+        43.26025,
+        5.380111
+      ],
+      "artists": [
+        {
+          "id": 539,
+          "name": "Damso",
+          "category": "hip-hop",
+          "description": "Damso est un rappeur belge, connu pour ses textes profonds, souvent sombres, et sa capacité à aborder des sujets introspectifs.",
+          "updatedAt": null,
+          "createdAt": "2024-09-11T11:25:41+02:00"
+        },
+        {
+          "id": 540,
+          "name": "Soso Maness",
+          "category": "rap",
+          "description": "Soso Maness est un rappeur marseillais qui mélange rap, musique populaire et humour dans ses morceaux.",
+          "updatedAt": null,
+          "createdAt": "2024-09-11T11:25:41+02:00"
+        },
+        {
+          "id": 541,
+          "name": "Nekfeu",
+          "category": "r'n'b",
+          "description": "Nekfeu est un rappeur et acteur français, membre des groupes 1995 et S-Crew, il est apprécié pour ses textes profonds et poétiques.",
+          "updatedAt": null,
+          "createdAt": "2024-09-11T11:25:41+02:00"
+        }
+      ],
+      "updatedAt": null,
+      "createdAt": "2024-09-11T11:25:41+02:00"
+    }
+  ],
+  "2024-07-13": [
+    {
+      "id": 318,
+      "name": "Buvette du Lac",
+      "date": "2024-07-13T18:50:50+02:00",
+      "category": null,
+      "type": "restaurant",
+      "description": "Consectetur molestias nobis corrupti quia. Illo incidunt incidunt est et nam illo. Repudiandae est et ducimus id est doloremque alias.",
+      "address": "",
+      "coordinates": [
+        43.261111,
+        5.381999
+      ],
+      "artists": [
+        {
+          "id": 530,
+          "name": "Laylow",
+          "category": "rap",
+          "description": "Laylow est un artiste français de rap et de musique électronique, reconnu pour ses sons futuristes et sa créativité.",
+          "updatedAt": null,
+          "createdAt": "2024-09-11T11:25:41+02:00"
+        },
+        {
+          "id": 531,
+          "name": "Ziak",
+          "category": "r'n'b",
+          "description": "Ziak est un rappeur masqué français, connu pour ses paroles crues et son style drill distinctif.",
+          "updatedAt": null,
+          "createdAt": "2024-09-11T11:25:41+02:00"
+        },
+        {
+          "id": 532,
+          "name": "Gambi",
+          "category": "rap",
+          "description": "Gambi est un jeune rappeur de Fontenay-sous-Bois, il s'est fait connaître pour ses morceaux festifs et ses refrains accrocheurs.",
+          "updatedAt": null,
+          "createdAt": "2024-09-11T11:25:41+02:00"
+        }
+      ],
+      "updatedAt": null,
+      "createdAt": "2024-09-11T11:25:41+02:00"
+    },
+    {
+      "id": 319,
+      "name": "Atelier DJing",
+      "date": "2024-07-13T18:50:50+02:00",
+      "category": "rap",
+      "type": "atelier",
+      "description": "Quo voluptatum nihil architecto. Adipisci sed autem sint aliquam fugit. Saepe cupiditate odit neque totam omnis facere. Est laudantium voluptatibus et quisquam.",
+      "address": "",
+      "coordinates": [
+        43.259833,
+        5.380083
+      ],
+      "artists": [
+        {
+          "id": 533,
+          "name": "Ninho",
+          "category": "r'n'b",
+          "description": "Ninho est l'un des rappeurs les plus prolifiques de sa génération, connu pour ses nombreux projets certifiés et son style polyvalent.",
+          "updatedAt": null,
+          "createdAt": "2024-09-11T11:25:41+02:00"
+        },
+        {
+          "id": 534,
+          "name": "SCH",
+          "category": "hip-hop",
+          "description": "SCH est un rappeur marseillais connu pour son esthétique visuelle unique et ses paroles souvent sombres et mélancoliques.",
+          "updatedAt": null,
+          "createdAt": "2024-09-11T11:25:41+02:00"
+        },
+        {
+          "id": 535,
+          "name": "Jul",
+          "category": "rap",
+          "description": "Jul est l'un des rappeurs français les plus populaires, avec un style auto-tuné reconnaissable et une productivité impressionnante.",
+          "updatedAt": null,
+          "createdAt": "2024-09-11T11:25:41+02:00"
+        }
+      ],
+      "updatedAt": null,
+      "createdAt": "2024-09-11T11:25:41+02:00"
+    }
+  ],
+  "2024-07-12": [
+    {
+      "id": 316,
+      "name": "Scène principale",
+      "date": "2024-07-12T19:05:40+02:00",
+      "category": "rap",
+      "type": "concert",
+      "description": "Ut consequatur officia esse ab. Vitae animi consectetur dolore sit.",
+      "address": "",
+      "coordinates": [
+        43.258028,
+        5.381417
+      ],
+      "artists": [
+        {
+          "id": 524,
+          "name": "Zola",
+          "category": "hip-hop",
+          "description": "Zola est un rappeur français originaire d'Évry, connu pour son style percutant et ses paroles authentiques.",
+          "updatedAt": null,
+          "createdAt": "2024-09-11T11:25:41+02:00"
+        },
+        {
+          "id": 525,
+          "name": "Leto",
+          "category": "rap",
+          "description": "Leto est un rappeur parisien, ancien membre du groupe PSO Thug, il s'est fait remarquer pour son style trap.",
+          "updatedAt": null,
+          "createdAt": "2024-09-11T11:25:41+02:00"
+        },
+        {
+          "id": 526,
+          "name": "Dinos",
+          "category": "r'n'b",
+          "description": "Dinos, de son vrai nom Jules Jomby, est un rappeur de La Courneuve, connu pour ses textes profonds et poétiques.",
+          "updatedAt": null,
+          "createdAt": "2024-09-11T11:25:41+02:00"
+        }
+      ],
+      "updatedAt": null,
+      "createdAt": "2024-09-11T11:25:41+02:00"
+    },
+    {
+      "id": 317,
+      "name": "Atelier graffiti",
+      "date": "2024-07-12T19:05:40+02:00",
+      "category": "hip-hop",
+      "type": "atelier",
+      "description": "Eaque facilis et mollitia odio exercitationem sunt asperiores ex. Repellendus non dolor sint ut natus molestiae consequatur. In sed et iusto sunt illo mollitia.",
+      "address": "",
+      "coordinates": [
+        43.259528,
+        5.380278
+      ],
+      "artists": [
+        {
+          "id": 527,
+          "name": "Koba LaD",
+          "category": "rap",
+          "description": "Koba LaD est un rappeur français originaire d'Évry, connu pour ses flows rapides et ses paroles sombres.",
+          "updatedAt": null,
+          "createdAt": "2024-09-11T11:25:41+02:00"
+        },
+        {
+          "id": 528,
+          "name": "Uzi",
+          "category": "r'n'b",
+          "description": "Uzi est un rappeur issu de la nouvelle génération du rap français, il se distingue par ses punchlines et son flow unique.",
+          "updatedAt": null,
+          "createdAt": "2024-09-11T11:25:41+02:00"
+        },
+        {
+          "id": 529,
+          "name": "Josman",
+          "category": "hip-hop",
+          "description": "Josman est un rappeur et beatmaker français, connu pour ses productions atmosphériques et ses textes introspectifs.",
+          "updatedAt": null,
+          "createdAt": "2024-09-11T11:25:41+02:00"
+        }
+      ],
+      "updatedAt": null,
+      "createdAt": "2024-09-11T11:25:41+02:00"
+    }
+  ]
+}

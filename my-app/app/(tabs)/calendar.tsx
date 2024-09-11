@@ -1,10 +1,105 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import {View, Text, StyleSheet, ImageBackground, TextInput, Image, ScrollView} from 'react-native';
+import {Ionicons} from "@expo/vector-icons";
+import {Collapsible} from "@/components/Collapsible";
+import {formatDate} from "@/utils/formatted";
+import StatusBadge from "@/components/StatusBadge";
+import FilterPills from "@/components/FilterPills";
+import {PageHeader} from "@/components/PageHeader";
+
+const filterLabels = ["Concerts", "Ateliers", "Conférences", "Stands", "Restaurants"]
+const fakeEvents: any[] = require('../../data.json');
+
+const image = require('../../assets/images/nfs-project-background.png');
 
 export default function CalendarScreen() {
+  const [events, setEvents] = React.useState<any[]>([]);
+  const [selectedFilter, setSelectedFilter] = React.useState<string | null>(null);
+
+  const handlePressFilter = (filter: string) => {
+    setSelectedFilter(filter);
+    console.log(`Filter selected: ${filter}`);
+  };
+
+  React.useEffect(() => {
+    fetch('http://localhost:8000/api/events/grouped-by-date')
+      .then(res => res.json())
+      .then((data) => {
+        console.log(data)
+        setEvents(data)
+      })
+      .catch((error) => {
+        console.log(error)
+        setEvents(fakeEvents)
+      })
+
+    Object.entries(events).map(([key, values], index) => {
+      console.log(key)
+      values.map((element: any, index: number) => {
+        console.log(element.name)
+      })
+    })
+  }, [])
+
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Événements du Festival</Text>
+    <View style={styles.container}>
+      <ImageBackground source={image} resizeMode="cover" style={styles.image}>
+        {/* HEADER RECHERCHE */}
+        <PageHeader/>
+        {/* FILTRE */}
+        <FilterPills filters={filterLabels} onPressFilter={handlePressFilter}/>
+        <ScrollView>
+          {/* Collapsibles */}
+          {
+            Object.entries(events).map(([key, values]) => (
+              <View key={key} style={styles.collapsibles}>
+                <Collapsible title={formatDate(key)}>
+                  {
+                    values.map((element: any, index: number) => (
+                      <View key={index} style={styles.collapsibleContent}>
+                        <View>
+                          <Text style={styles.collapsibleTitle}>{element.name}</Text>
+                          <Text style={styles.collapsibleTag}>{element.name}</Text>
+                          <StatusBadge date={key} />
+                        </View>
+                        <Image source={require('../../assets/images/avatar.png')}/>
+                      </View>
+                    ))
+                  }
+                </Collapsible>
+              </View>
+            ))
+          }
+        </ScrollView>
+      </ImageBackground>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#ffffff",
+  },
+  image: {
+    flex: 1,
+    paddingVertical: 50,
+    paddingHorizontal: 20
+  },
+  collapsibles: {
+    marginBottom: 14,
+  },
+  collapsibleContent: {
+    flexDirection:"row",
+    justifyContent:"space-between",
+    alignItems: "center",
+    marginBottom: 44
+  },
+  collapsibleTitle: {
+    fontSize: 20
+  },
+  collapsibleTag: {
+    fontSize: 12,
+    marginVertical: 10
+  }
+});

@@ -69,9 +69,7 @@ export default function HomeScreen() {
             </Text>
 
             {/* Bouton fléché à droite */}
-            <TouchableOpacity style={styles.arrowButton}>
-              <Ionicons name="chevron-forward" size={24} color="black" />
-            </TouchableOpacity>
+
           </View>
         </View>
 
