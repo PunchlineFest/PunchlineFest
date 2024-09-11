@@ -7,7 +7,6 @@
         "./*"
       ]
     },
-    "typeRoots": ["./types"]
   },
   "include": [
     "**/*.ts",

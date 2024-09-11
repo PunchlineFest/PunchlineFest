@@ -1,2 +1,1 @@
-import {API_URL} from "@env";
-export const API_BASE=API_URL;
+export const API_BASE="http://192.168.1.14:8000";

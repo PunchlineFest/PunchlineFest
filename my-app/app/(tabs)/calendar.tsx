@@ -8,6 +8,7 @@ import FilterPills from "@/components/FilterPills";
 import {PageHeader} from "@/components/PageHeader";
 import axios from "axios";
 import {API_BASE} from "@/config/env";
+import {useFonts} from "expo-font";
 
 const filterLabels = ["Concert", "Atelier", "Conférence", "Stand", "Restaurant"]
 
@@ -17,6 +18,10 @@ export default function CalendarScreen() {
   const [events, setEvents] = React.useState<any[]>([]);
   const [selectedFilters, setSelectedFilters] = React.useState<string[]>([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
+
+  let [fontsLoaded] = useFonts({
+    'BebasNeue': require('../../assets/fonts/BebasNeue-Regular.ttf'),
+  });
 
   const handlePressFilter = (filter: string) => {
     // Si le filtre est déjà dans selectedFilters, on le retire (désélection)
@@ -32,7 +37,6 @@ export default function CalendarScreen() {
     const queryParams = '?' + filters.map(filter => `types[]=${encodeURIComponent(filter.toLowerCase())}`).join('&');
     try {
       const response = await axios.get(`${API_BASE}/events/grouped-by-date${queryParams}`);
-      console.log(response)
       if (response.data) {
         setEvents(response.data);
         setIsLoading(false);
@@ -101,7 +105,8 @@ const styles = StyleSheet.create({
     marginBottom: 44
   },
   collapsibleTitle: {
-    fontSize: 20
+    fontSize: 20,
+    fontFamily: 'BebasNeue'
   },
   collapsibleTag: {
     fontSize: 12,
