@@ -2,8 +2,20 @@ import React from 'react';
 import { View, Text, TextInput, StyleSheet, Image, TouchableOpacity, ScrollView, StatusBar, Linking } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import * as Font from 'expo-font';
+import { useFonts } from 'expo-font';
+import AppLoading from 'expo-app-loading';
 
 export default function HomeScreen() {
+  // Charger les polices
+  let [fontsLoaded] = useFonts({
+    'BebasNeue': require('../../assets/fonts/BebasNeue-Regular.ttf'),
+  });
+
+  // Si la police n'est pas encore chargée, afficher AppLoading
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  }
   // Fonction pour ouvrir un lien
   const openLink = (url: string) => {
     Linking.openURL(url).catch((err) => console.error("Couldn't load page", err));
@@ -36,7 +48,7 @@ export default function HomeScreen() {
           <Ionicons name="search" size={20} color="#666" style={styles.searchIcon} />
           <TextInput
             style={styles.searchInput}
-            placeholder="Rechercher un événement"
+            placeholder="Rechercher"
             placeholderTextColor="#666"
           />
         </View>
@@ -125,7 +137,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     left: -55,  // Déplace le cercle encore plus à gauche pour créer l'effet coupé
-    top: -75,    // Légèrement décalé vers le haut
+    top: -50,    // Légèrement décalé vers le haut
   },
   innerCircle: {
     width: 100, // Taille du cercle intérieur
@@ -157,10 +169,10 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1C1C1E',
+    backgroundColor: '#ECE6F0',
     borderRadius: 10,
     padding: 10,
-    marginBottom: 20,
+    marginBottom: 40,
   },
   searchIcon: {
     marginRight: 10,
@@ -183,12 +195,13 @@ const styles = StyleSheet.create({
     color: '#fff',
     textAlign: 'center',
     marginBottom: 70,
+    fontSize: 24, // Taille ajustée si nécessaire
+    fontFamily: 'BebasNeue', // Utilisation de la nouvelle police
   },
   mapContainer: {
     position: 'relative', // Utilisé pour positionner les éléments en superposition
     alignItems: 'center',
     marginBottom: 20,
-    position: 'relative', // Assure que les éléments positionnés en absolu sont relatifs à ce conteneur
   },
   mapImage: {
     width: '100%',
@@ -226,6 +239,6 @@ const styles = StyleSheet.create({
   socialContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginBottom: 20,
+    marginTop: 10,
   },
 });
