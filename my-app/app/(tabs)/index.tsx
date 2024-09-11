@@ -10,6 +10,7 @@ export default function HomeScreen() {
   // Charger les polices
   let [fontsLoaded] = useFonts({
     'BebasNeue': require('../../assets/fonts/BebasNeue-Regular.ttf'),
+    'Poppins': require('../../assets/fonts/PoppinsRegular-B2Bw.otf')
   });
 
   // Si la police n'est pas encore chargée, afficher AppLoading

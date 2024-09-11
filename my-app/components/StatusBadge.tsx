@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   badgeText: {
+    fontFamily: "Poppins",
     color: '#fff',
     fontSize: 14,
     marginRight: 4

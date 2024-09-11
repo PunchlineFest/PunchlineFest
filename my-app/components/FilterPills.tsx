@@ -51,12 +51,14 @@ const styles = StyleSheet.create({
     marginRight: 10
   },
   pillText: {
+    fontFamily: "Poppins",
     color: '#fff',
   },
   activePill: {
-    backgroundColor: '#32CD32', // Couleur verte pour les "pills" actives
+    backgroundColor: '#BEB8AC', // Couleur verte pour les "pills" actives
   },
   activePillText: {
+    fontFamily: "Poppins",
     color: '#fff', // Texte blanc pour les "pills" actives
   },
 });

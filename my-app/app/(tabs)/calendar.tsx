@@ -17,11 +17,9 @@ const image = require('../../assets/images/nfs-project-background.png');
 export default function CalendarScreen() {
   const [events, setEvents] = React.useState<any[]>([]);
   const [selectedFilters, setSelectedFilters] = React.useState<string[]>([]);
+  const [searchTerm, setSearchTerm] = React.useState<string>('');
+  const [submittedSearchTerm, setSubmittedSearchTerm] = React.useState<string>('');
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
-
-  let [fontsLoaded] = useFonts({
-    'BebasNeue': require('../../assets/fonts/BebasNeue-Regular.ttf'),
-  });
 
   const handlePressFilter = (filter: string) => {
     // Si le filtre est déjà dans selectedFilters, on le retire (désélection)
@@ -33,10 +31,19 @@ export default function CalendarScreen() {
     }
   };
 
-  const fetchEvents = async (filters: string[]) => {
-    const queryParams = '?' + filters.map(filter => `types[]=${encodeURIComponent(filter.toLowerCase())}`).join('&');
+  const handleSearchSubmit = () => {
+    setSubmittedSearchTerm(searchTerm); // Met à jour le terme de recherche soumis
+  };
+
+  const fetchEvents = async (filters: string[], search: string) => {
+    const queryParams = [
+      ...filters.map(filter => `types[]=${filter.toLowerCase()}`),
+      search ? `search=${search.toLowerCase()}` : '',
+    ].filter(Boolean).join('&');
+
     try {
-      const response = await axios.get(`${API_BASE}/events/grouped-by-date${queryParams}`);
+      const response = await axios.get(`${API_BASE}/events/grouped-by-date?${queryParams}`);
+      console.log(response)
       if (response.data) {
         setEvents(response.data);
         setIsLoading(false);
@@ -47,14 +54,18 @@ export default function CalendarScreen() {
   };
 
   React.useEffect(() => {
-    fetchEvents(selectedFilters);
-  }, [selectedFilters])
+    fetchEvents(selectedFilters, submittedSearchTerm);
+  }, [selectedFilters, submittedSearchTerm])
 
   return (
     <View style={styles.container}>
       <ImageBackground source={image} resizeMode="cover" style={styles.image}>
         {/* HEADER RECHERCHE */}
-        <PageHeader/>
+        <PageHeader
+          value={searchTerm}
+          onChangeText={setSearchTerm}
+          handleSearchSubmit={handleSearchSubmit}
+        />
         {/* FILTRE */}
         <FilterPills filters={filterLabels} onPressFilter={handlePressFilter} selectedFilters={selectedFilters}/>
         <ScrollView>
@@ -68,7 +79,7 @@ export default function CalendarScreen() {
                         <View key={index} style={styles.collapsibleContent}>
                           <View>
                             <Text style={styles.collapsibleTitle}>{element.name}</Text>
-                            <Text style={styles.collapsibleTag}>{element.name}</Text>
+                            <Text style={styles.collapsibleTag}>{element.type}</Text>
                             <StatusBadge date={key} />
                           </View>
                           <Image source={require('../../assets/images/avatar.png')}/>
@@ -109,6 +120,7 @@ const styles = StyleSheet.create({
     fontFamily: 'BebasNeue'
   },
   collapsibleTag: {
+    fontFamily: "Poppins",
     fontSize: 12,
     marginVertical: 10
   }
