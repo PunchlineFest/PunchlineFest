@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, ImageBackground, TextInput, Image, ScrollView} from 'react-native';
+import {View, Text, StyleSheet, ImageBackground, TextInput, Image, ScrollView, ActivityIndicator} from 'react-native';
 import {Ionicons} from "@expo/vector-icons";
 import {Collapsible} from "@/components/Collapsible";
 import {formatDate} from "@/utils/formatted";
@@ -7,31 +7,44 @@ import StatusBadge from "@/components/StatusBadge";
 import FilterPills from "@/components/FilterPills";
 import {PageHeader} from "@/components/PageHeader";
 import axios from "axios";
+import {API_BASE} from "@/config/env";
 
-const filterLabels = ["Concerts", "Ateliers", "Conférences", "Stands", "Restaurants"]
+const filterLabels = ["Concert", "Atelier", "Conférence", "Stand", "Restaurant"]
 
 const image = require('../../assets/images/nfs-project-background.png');
 
 export default function CalendarScreen() {
   const [events, setEvents] = React.useState<any[]>([]);
-  const [selectedFilter, setSelectedFilter] = React.useState<string | null>(null);
+  const [selectedFilters, setSelectedFilters] = React.useState<string[]>([]);
+  const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
   const handlePressFilter = (filter: string) => {
-    setSelectedFilter(filter);
-    console.log(`Filter selected: ${filter}`);
+    // Si le filtre est déjà dans selectedFilters, on le retire (désélection)
+    if (selectedFilters.includes(filter)) {
+      setSelectedFilters(selectedFilters.filter(f => f !== filter));
+    } else {
+      // Sinon, on l'ajoute (sélection)
+      setSelectedFilters([...selectedFilters, filter]);
+    }
   };
 
-  const fetchEvents = async () => {
+  const fetchEvents = async (filters: string[]) => {
+    const queryParams = '?' + filters.map(filter => `types[]=${encodeURIComponent(filter.toLowerCase())}`).join('&');
     try {
-      const response = await axios.get('http://192.168.224.56:8000/api/events/grouped-by-date');
-      setEvents(response.data);
+      const response = await axios.get(`${API_BASE}/events/grouped-by-date${queryParams}`);
+      console.log(response)
+      if (response.data) {
+        setEvents(response.data);
+        setIsLoading(false);
+      }
     } catch (error) {
       console.error('Une erreur est survenue', error);
     }
   };
+
   React.useEffect(() => {
-    fetchEvents();
-  }, [])
+    fetchEvents(selectedFilters);
+  }, [selectedFilters])
 
   return (
     <View style={styles.container}>
@@ -39,28 +52,28 @@ export default function CalendarScreen() {
         {/* HEADER RECHERCHE */}
         <PageHeader/>
         {/* FILTRE */}
-        <FilterPills filters={filterLabels} onPressFilter={handlePressFilter}/>
+        <FilterPills filters={filterLabels} onPressFilter={handlePressFilter} selectedFilters={selectedFilters}/>
         <ScrollView>
           {/* Collapsibles */}
-          {
-            Object.entries(events).map(([key, values]) => (
-              <View key={key} style={styles.collapsibles}>
-                <Collapsible title={formatDate(key)}>
-                  {
-                    values.map((element: any, index: number) => (
-                      <View key={index} style={styles.collapsibleContent}>
-                        <View>
-                          <Text style={styles.collapsibleTitle}>{element.name}</Text>
-                          <Text style={styles.collapsibleTag}>{element.name}</Text>
-                          <StatusBadge date={key} />
+          { !isLoading ?
+              Object.entries(events).map(([key, values]) => (
+                <View key={key} style={styles.collapsibles}>
+                  <Collapsible title={formatDate(key)}>
+                    {
+                      values.map((element: any, index: number) => (
+                        <View key={index} style={styles.collapsibleContent}>
+                          <View>
+                            <Text style={styles.collapsibleTitle}>{element.name}</Text>
+                            <Text style={styles.collapsibleTag}>{element.name}</Text>
+                            <StatusBadge date={key} />
+                          </View>
+                          <Image source={require('../../assets/images/avatar.png')}/>
                         </View>
-                        <Image source={require('../../assets/images/avatar.png')}/>
-                      </View>
-                    ))
-                  }
-                </Collapsible>
-              </View>
-            ))
+                      ))
+                    }
+                  </Collapsible>
+                </View>
+              )) : <ActivityIndicator size="large" color="#0000ff" />
           }
         </ScrollView>
       </ImageBackground>

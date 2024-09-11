@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-const FilterPills = ({ filters, onPressFilter }: { filters: string[], onPressFilter: (filter: string) => void }) => {
+const FilterPills = ({ filters, onPressFilter, selectedFilters }: { filters: string[], onPressFilter: (filter: string) => void, selectedFilters: string[] }) => {
   return (
     <View style={styles.container}>
       <ScrollView
@@ -9,15 +9,22 @@ const FilterPills = ({ filters, onPressFilter }: { filters: string[], onPressFil
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.scrollViewContent}
       >
-        {filters.map((filter, index) => (
-          <TouchableOpacity
-            key={index}
-            style={styles.pill}
-            onPress={() => onPressFilter(filter)}
-          >
-            <Text style={styles.pillText}>{filter}</Text>
-          </TouchableOpacity>
-        ))}
+        {filters.map((filter, index) => {
+          // Vérification si le filtre est actif (sélectionné)
+          const isActive = selectedFilters.includes(filter);
+
+          return (
+            <TouchableOpacity
+              key={index}
+              style={[styles.pill, isActive && styles.activePill]}
+              onPress={() => onPressFilter(filter)}
+            >
+              <Text style={[styles.pillText, isActive && styles.activePillText]}>
+                {filter}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
       </ScrollView>
     </View>
   );
@@ -45,7 +52,13 @@ const styles = StyleSheet.create({
   },
   pillText: {
     color: '#fff',
-  }
+  },
+  activePill: {
+    backgroundColor: '#32CD32', // Couleur verte pour les "pills" actives
+  },
+  activePillText: {
+    color: '#fff', // Texte blanc pour les "pills" actives
+  },
 });
 
 export default FilterPills
