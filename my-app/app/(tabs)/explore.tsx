@@ -36,6 +36,9 @@ export default () => (
      <Marker coordinate={{latitude: 43.258028, longitude: 5.381417}} title={'Scène principale'} />
      <Marker coordinate={{latitude: 43.259528, longitude: 5.380278}} title={'Atelier graffiti'} />
      <Marker coordinate={{latitude: 43.261111, longitude: 5.381999}} title={'Buvette du lac'} />
+     <Marker coordinate={{latitude: 43.259833, longitude: 5.380083}} title={'Atelier DJing'} />
+     <Marker coordinate={{latitude: 43.260028, longitude: 5.380611}} title={'Atelier de Breakdance'} />
+     <Marker coordinate={{latitude: 43.260250, longitude: 5.380111}} title={'Conférence'} description={'Conférence sur l\'impact du rap dans la société'} />
      </MapView>
    </View>
 );
