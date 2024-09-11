@@ -6,9 +6,9 @@ import {formatDate} from "@/utils/formatted";
 import StatusBadge from "@/components/StatusBadge";
 import FilterPills from "@/components/FilterPills";
 import {PageHeader} from "@/components/PageHeader";
+import axios from "axios";
 
 const filterLabels = ["Concerts", "Ateliers", "Conférences", "Stands", "Restaurants"]
-const fakeEvents: any[] = require('../../data.json');
 
 const image = require('../../assets/images/nfs-project-background.png');
 
@@ -21,24 +21,16 @@ export default function CalendarScreen() {
     console.log(`Filter selected: ${filter}`);
   };
 
+  const fetchEvents = async () => {
+    try {
+      const response = await axios.get('http://192.168.224.56:8000/api/events/grouped-by-date');
+      setEvents(response.data);
+    } catch (error) {
+      console.error('Une erreur est survenue', error);
+    }
+  };
   React.useEffect(() => {
-    fetch('http://localhost:8000/api/events/grouped-by-date')
-      .then(res => res.json())
-      .then((data) => {
-        console.log(data)
-        setEvents(data)
-      })
-      .catch((error) => {
-        console.log(error)
-        setEvents(fakeEvents)
-      })
-
-    Object.entries(events).map(([key, values], index) => {
-      console.log(key)
-      values.map((element: any, index: number) => {
-        console.log(element.name)
-      })
-    })
+    fetchEvents();
   }, [])
 
   return (
