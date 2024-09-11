@@ -11,7 +11,11 @@
 
 ```cmd 
 cd myapp
+```  
+```cmd 
 npm install
+```  
+```cmd 
 npm run start
 ```  
 
