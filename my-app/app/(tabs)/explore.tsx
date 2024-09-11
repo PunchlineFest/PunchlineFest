@@ -22,7 +22,7 @@ export default () => {
   // Fonction pour récupérer les données de l'API
   const fetchEvents = async () => {
     try {
-        const response = await axios.get('http://10.0.2.2:8000/api/events');
+        const response = await axios.get('http://172.16.2.198:8000/api/events');
         setEvents(response.data); // Mettre à jour les événements dans le state
     } catch (error) {
       console.error('Erreur lors de la récupération des événements', error);
