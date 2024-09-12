@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, ImageBackground, TextInput, Image, ScrollView, ActivityIndicator} from 'react-native';
+import {View, Text, StyleSheet, ImageBackground, TextInput, Image, ScrollView, ActivityIndicator, TouchableOpacity} from 'react-native';
 import {Ionicons} from "@expo/vector-icons";
 import {Collapsible} from "@/components/Collapsible";
 import {formatDate} from "@/utils/formatted";
@@ -9,6 +9,7 @@ import {PageHeader} from "@/components/PageHeader";
 import axios from "axios";
 import {API_BASE} from "@/config/env";
 import {useFonts} from "expo-font";
+import {router} from "expo-router";
 
 const filterLabels = ["Concert", "Atelier", "Conférence", "Stand", "Restaurant"]
 
@@ -44,8 +45,6 @@ export default function CalendarScreen() {
     try {
       console.log(`${API_BASE}/events/grouped-by-date?${queryParams}`)
       const response = await axios.get(`${API_BASE}/events/grouped-by-date?${queryParams}`);
-      
-      console.log(response)
       if (response.data) {
         setEvents(response.data);
         setIsLoading(false);
@@ -80,7 +79,14 @@ export default function CalendarScreen() {
                       values.map((element: any, index: number) => (
                         <View key={index} style={styles.collapsibleContent}>
                           <View>
-                            <Text style={styles.collapsibleTitle}>{element.name}</Text>
+                            <TouchableOpacity
+                              key={element.id}
+                              style={{flexDirection: "row", alignItems:"center"}}
+                              onPress={() => router.push(`/calendar/${element.id}`)} // Redirige vers la page de détail de l'activité
+                            >
+                              <Text style={styles.collapsibleTitle}>{element.name}</Text>
+                              <Ionicons name="search" size={16} style={{marginLeft:5}} />
+                            </TouchableOpacity>
                             <Text style={styles.collapsibleTag}>{element.type}</Text>
                             <StatusBadge date={key} />
                           </View>
@@ -125,5 +131,8 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins",
     fontSize: 12,
     marginVertical: 10
+  },
+  activityName: {
+
   }
 });

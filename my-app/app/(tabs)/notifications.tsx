@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: "PoppinsBold",
     marginBottom: 10,
     color: '#333',
   },
@@ -258,6 +258,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
     lineHeight: 20,
+    fontFamily: "Poppins"
   },
   notificationToggle: {
     flexDirection: 'row',
@@ -271,6 +272,7 @@ const styles = StyleSheet.create({
   toggleText: {
     fontSize: 16,
     color: '#333',
+    fontFamily: "Poppins"
   },
   eventItem: {
     backgroundColor: '#1C1C1E',
@@ -284,22 +286,27 @@ const styles = StyleSheet.create({
   },
   eventName: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'PoppinsBold',
     color: '#fff',
   },
   eventDetails: {
     fontSize: 14,
     color: '#ccc',
     marginVertical: 5,
+    fontFamily: "Poppins"
   },
   eventDate: {
     fontSize: 12,
     color: '#aaa',
+    fontFamily: "Poppins"
   },
   bellIcon: {
     position: 'absolute',
     bottom: 10,
     right: 10,
+  eventTextDisabled: {
+    color: '#555',
+    fontFamily: "Poppins"
   },
   testButton: {
     backgroundColor: '#009EE2',
@@ -338,11 +345,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
+    fontFamily: "Poppins"
   },
   modalSubtitle: {
     fontSize: 16,
     marginBottom: 20,
     color: '#333',
+    fontFamily: "Poppins"
   },
   modalButton: {
     width: '100%',
@@ -355,6 +364,7 @@ const styles = StyleSheet.create({
   modalButtonText: {
     color: '#fff',
     fontWeight: 'bold',
+    fontFamily: "Poppins"
   },
   cancelButton: {
     backgroundColor: '#FF3B30',

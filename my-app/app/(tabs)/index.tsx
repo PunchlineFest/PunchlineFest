@@ -10,7 +10,8 @@ export default function HomeScreen() {
   // Charger les polices
   let [fontsLoaded] = useFonts({
     'BebasNeue': require('../../assets/fonts/BebasNeue-Regular.ttf'),
-    'Poppins': require('../../assets/fonts/PoppinsRegular-B2Bw.otf')
+    'Poppins': require('../../assets/fonts/PoppinsRegular-B2Bw.otf'),
+    'PoppinsBold': require('../../assets/fonts/PoppinsBold-GdJA.otf')
   });
 
   // Si la police n'est pas encore chargée, afficher AppLoading
@@ -62,7 +63,7 @@ export default function HomeScreen() {
 
           {/* Bouton "Carte du festival" */}
           <TouchableOpacity style={styles.mapButton}>
-            <Text style={styles.mapButtonText}>Carte du festival</Text>
+            <Text style={{fontFamily:"PoppinsBold", fontSize: 11}}>Carte du festival</Text>
           </TouchableOpacity>
 
           {/* Texte descriptif superposé */}
@@ -100,7 +101,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#000',
     paddingTop: StatusBar.currentHeight || 20,  // Gérer la barre de statut
-    padding: 20,
+    // padding: 20,
   },
   scrollContent: {
     paddingBottom: 80, // Pour éviter que les éléments ne se chevauchent avec la barre de navigation
@@ -119,9 +120,9 @@ const styles = StyleSheet.create({
   },
   outerCircle: {
     position: 'absolute',
-    width: 180,  // Réduction de la taille du cercle
-    height: 180,
-    borderRadius: 100,  // Cercle extérieur
+    width: 220,  // Réduction de la taille du cercle
+    height: 210,
+    borderRadius: 150,  // Cercle extérieur
     backgroundColor: '#BEB8AC',
     justifyContent: 'center',
     alignItems: 'center',
@@ -129,31 +130,34 @@ const styles = StyleSheet.create({
     top: -50,    // Légèrement décalé vers le haut
   },
   innerCircle: {
-    width: 100, // Taille du cercle intérieur
-    height: 100,
-    borderRadius: 50, // Cercle intérieur
+    width: 150, // Taille du cercle intérieur
+    height: 150,
+    borderRadius: 100, // Cercle intérieur
     backgroundColor: '#FFFFFF', // Couleur du cercle intérieur (blanc)
     justifyContent: 'center',
     alignItems: 'center',
   },
   logo: {
-    width: 70, // Ajuste selon la taille du logo
-    height: 70,
+    width: 77, // Ajuste selon la taille du logo
+    height: 62,
+    resizeMode: "cover"
   },
   titleContainer: {
     flex: 1,
+    paddingRight:20,
     justifyContent: 'center', // Centrer verticalement le texte
     alignItems: 'flex-start', // Aligner le texte à droite du logo
     marginLeft: 20, // Ajouter de l'espace entre le logo et le texte
   },
   festivalTitle: {
-    fontSize: 22, // Taille du texte "PUNCHLINE FEST"
-    fontWeight: 'bold',
+    fontSize: 35, // Taille du texte "PUNCHLINE FEST"
+    fontFamily: 'BebasNeue',
     color: '#fff',
   },
   festivalDates: {
-    fontSize: 14,
+    fontSize: 20,
     color: '#ccc',
+    fontFamily: "BebasNeue"
   },
   searchContainer: {
     flexDirection: 'row',
@@ -162,6 +166,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     marginBottom: 40,
+    marginHorizontal: 20
   },
   searchIcon: {
     marginRight: 10,
@@ -170,6 +175,7 @@ const styles = StyleSheet.create({
     flex: 1,
     color: '#fff',
     fontSize: 16,
+    fontFamily: "Poppins"
   },
   concertContainer: {
     alignItems: 'center', // Centrer l'image de concert
@@ -183,14 +189,16 @@ const styles = StyleSheet.create({
   description: {
     color: '#fff',
     textAlign: 'center',
-    marginBottom: 70,
-    fontSize: 24, // Taille ajustée si nécessaire
+    marginBottom: 20,
+    fontSize: 15, // Taille ajustée si nécessaire
     fontFamily: 'BebasNeue', // Utilisation de la nouvelle police
+    paddingHorizontal:20
   },
   mapContainer: {
     position: 'relative', // Utilisé pour positionner les éléments en superposition
     alignItems: 'center',
     marginBottom: 20,
+    paddingHorizontal: 20
   },
   mapImage: {
     width: '100%',
@@ -205,6 +213,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 8,
     borderRadius: 10,
+    marginLeft:20
   },
   descriptionContainer: {
     position: 'absolute',
@@ -220,12 +229,14 @@ const styles = StyleSheet.create({
   descriptionText: {
     flex: 1,
     color: '#000',
-    fontWeight: 'bold',
+    fontFamily:"Poppins",
+    fontSize: 11
   },
   arrowButton: {
     marginLeft: 10, // Espace entre le texte et la flèche
   },
   socialContainer: {
+    paddingHorizontal:40,
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginTop: 10,
