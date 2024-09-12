@@ -61,21 +61,7 @@ export default function NotificationsScreen() {
     });
     setModalVisible(false);
   };
-  const scheduleTestNotification = async () => {
-    const hasPermission = await requestNotificationPermission();
-    if (!hasPermission) return;
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title: 'Test Notification',
-        body: 'Ceci est une notification de test.',
-      },
-      trigger: { seconds: 5 },
-    }).then(() => {
-      console.log("Notification programmée avec succès !");
-    }).catch((error) => {
-      console.error("Erreur lors de la planification de la notification", error);
-    });
-  };
+  
   const toggleSwitch = () => setIsReminderEnabled(previousState => !previousState);
   const fetchEvents = async () => {
     try {
@@ -158,9 +144,7 @@ export default function NotificationsScreen() {
             )}
           </TouchableOpacity>
         ))}
-        <TouchableOpacity style={styles.testButton} onPress={scheduleTestNotification}>
-          <Text style={styles.testButtonText}>Recevoir une notification de test</Text>
-        </TouchableOpacity>
+       
         {selectedEvent && (
           <Modal animationType="slide" transparent={true} visible={modalVisible} onRequestClose={() => setModalVisible(false)}>
             <View style={styles.modalContainer}>

@@ -83,6 +83,7 @@ export default function CalendarScreen() {
                               key={element.id}
                               style={{flexDirection: "row", alignItems:"center"}}
                               onPress={() => router.push(`/calendar/${element.id}`)} // Redirige vers la page de détail de l'activité
+                              
                             >
                               <Text style={styles.collapsibleTitle}>{element.name}</Text>
                               <Ionicons name="search" size={16} style={{marginLeft:5}} />
