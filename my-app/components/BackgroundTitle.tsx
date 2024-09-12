@@ -11,7 +11,7 @@ export const BackgroundTitle = ({
   return (
 
     <View style={styles.titleBg}>
-      <ImageBackground source={titleBackground} resizeMode={"cover"} style={{paddingHorizontal:25, paddingTop: 13}}>
+      <ImageBackground source={titleBackground} resizeMode={"cover"} style={{paddingTop: 13, width: 150}}>
         <Text style={[styles.text, styles.sectionTitle]}>{label}</Text>
       </ImageBackground>
     </View>
