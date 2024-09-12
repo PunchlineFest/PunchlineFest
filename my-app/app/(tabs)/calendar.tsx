@@ -43,6 +43,7 @@ export default function CalendarScreen() {
     ].filter(Boolean).join('&');
 
     try {
+      console.log(`${API_BASE}/events/grouped-by-date?${queryParams}`)
       const response = await axios.get(`${API_BASE}/events/grouped-by-date?${queryParams}`);
       if (response.data) {
         setEvents(response.data);

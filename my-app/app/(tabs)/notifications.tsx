@@ -1,6 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Switch, ScrollView, TouchableOpacity, Alert, Modal, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Switch, ScrollView, TouchableOpacity, Modal, Pressable, RefreshControl } from 'react-native';
 import * as Notifications from 'expo-notifications';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { API_BASE } from '@/config/env';
+
+// Configuration pour afficher les notifications même en foreground
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
 
 export default function NotificationsScreen() {
   const [isReminderEnabled, setIsReminderEnabled] = useState(false);
@@ -8,18 +19,27 @@ export default function NotificationsScreen() {
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [refreshing, setRefreshing] = useState(false);
+  const [reminders, setReminders] = useState({});
+  const [customAlert, setCustomAlert] = useState({ visible: false, title: '', message: '' });
 
-  // Fonction pour demander les permissions de notification
   const requestNotificationPermission = async () => {
     const { status } = await Notifications.requestPermissionsAsync();
     if (status !== 'granted') {
-      alert('Vous devez activer les notifications pour cette fonctionnalité.');
+      showCustomAlert('Permission requise', 'Vous devez activer les notifications pour cette fonctionnalité.');
       return false;
     }
     return true;
   };
 
-  // Fonction pour programmer une notification
+  const showCustomAlert = (title, message) => {
+    setCustomAlert({ visible: true, title, message });
+  };
+
+  const closeCustomAlert = () => {
+    setCustomAlert({ visible: false, title: '', message: '' });
+  };
+
   const scheduleNotification = async (event, delayInMinutes) => {
     const hasPermission = await requestNotificationPermission();
     if (!hasPermission) return;
@@ -29,7 +49,7 @@ export default function NotificationsScreen() {
     const triggerTime = eventTime - delayInMinutes * 60 * 1000;
 
     if (triggerTime <= currentTime) {
-      alert("Le délai choisi est trop court ");
+      showCustomAlert("Erreur", "Le délai choisi est trop court.");
       return;
     }
 
@@ -40,12 +60,11 @@ export default function NotificationsScreen() {
       },
       trigger: { seconds: (triggerTime - currentTime) / 1000 },
     }).then(() => {
-      Alert.alert(
-        "Rappel", // Titre de l'alerte
-        `Vous recevrez une notification ${delayInMinutes} minutes avant le début de ${event.name}.`, // Message de l'alerte
-        [{ text: "OK" }] // Bouton OK pour fermer l'alerte
-      );
-      
+      showCustomAlert("Rappel programmé", `Vous recevrez une notification ${delayInMinutes} minutes avant le début de ${event.name}.`);
+      setReminders((prevReminders) => ({
+        ...prevReminders,
+        [event.id]: true,
+      }));
     }).catch((error) => {
       console.error("Erreur lors de la planification de la notification", error);
     });
@@ -53,36 +72,53 @@ export default function NotificationsScreen() {
     setModalVisible(false);
   };
 
-  
+  const scheduleTestNotification = async () => {
+    const hasPermission = await requestNotificationPermission();
+    if (!hasPermission) return;
 
-  // Fonction pour activer ou désactiver les notifications
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: 'Test Notification',
+        body: 'Ceci est une notification de test.',
+      },
+      trigger: { seconds: 5 },
+    }).then(() => {
+      console.log("Notification programmée avec succès !");
+    }).catch((error) => {
+      console.error("Erreur lors de la planification de la notification", error);
+    });
+  };
+
   const toggleSwitch = () => setIsReminderEnabled(previousState => !previousState);
 
-  // Fonction pour récupérer les événements depuis l'API
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const response = await fetch('http://172.16.2.198:8000/api/events');
-        const data = await response.json();
-        setEvents(data);
-        setLoading(false);
-      } catch (error) {
-        console.error('Erreur lors de la récupération des événements:', error);
-        setLoading(false);
-      }
-    };
+  const fetchEvents = async () => {
+    try {
+      const response = await fetch(`${API_BASE}/events`);
+      const data = await response.json();
+      setEvents(data);
+      setLoading(false);
+    } catch (error) {
+      console.error('Erreur lors de la récupération des événements:', error);
+      setLoading(false);
+    }
+  };
 
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchEvents();
+    setRefreshing(false);
+  };
+
+  useEffect(() => {
     fetchEvents();
   }, []);
 
-  // Fonction pour ouvrir le modal et sélectionner l'événement
   const chooseReminderTime = (event) => {
     const eventTime = new Date(event.date).getTime();
     const currentTime = new Date().getTime();
 
-    // Vérifier si l'événement est passé
     if (eventTime < currentTime) {
-      Alert.alert("Événement terminé", "Cet évènement est déjà fini :(");
+      showCustomAlert("Événement terminé", "Cet évènement est déjà fini :(");
     } else {
       setSelectedEvent(event);
       setModalVisible(true);
@@ -99,7 +135,12 @@ export default function NotificationsScreen() {
 
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Rappels pour les événements</Text>
           <Text style={styles.sectionText}>
@@ -118,16 +159,12 @@ export default function NotificationsScreen() {
           />
         </View>
 
-        {/* Liste des événements */}
         {events.map(event => (
           <TouchableOpacity
             key={event.id}
-            style={[
-              styles.eventItem,
-              !isReminderEnabled && styles.eventItemDisabled // Appliquer les styles grisés si l'option est désactivée
-            ]}
-            onPress={() => isReminderEnabled && chooseReminderTime(event)} // Permet de cliquer uniquement si l'option est activée
-            disabled={!isReminderEnabled} // Désactiver le clic si l'option est désactivée
+            style={[styles.eventItem, !isReminderEnabled && styles.eventItemDisabled]}
+            onPress={() => isReminderEnabled && chooseReminderTime(event)}
+            disabled={!isReminderEnabled}
           >
             <Text style={[styles.eventName, !isReminderEnabled && styles.eventTextDisabled]}>
               {event.name}
@@ -138,51 +175,58 @@ export default function NotificationsScreen() {
             <Text style={[styles.eventDate, !isReminderEnabled && styles.eventTextDisabled]}>
               Date: {new Date(event.date).toLocaleDateString('fr-FR')} {new Date(event.date).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
             </Text>
+            {reminders[event.id] && (
+              <Ionicons name="notifications-outline" size={24} color="yellow" style={styles.bellIcon} />
+            )}
           </TouchableOpacity>
         ))}
 
-        {/* Modal pour choisir le délai de notification */}
+        <TouchableOpacity style={styles.testButton} onPress={scheduleTestNotification}>
+          <Text style={styles.testButtonText}>Recevoir une notification de test</Text>
+        </TouchableOpacity>
+
         {selectedEvent && (
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => setModalVisible(false)}
-          >
+          <Modal animationType="slide" transparent={true} visible={modalVisible} onRequestClose={() => setModalVisible(false)}>
             <View style={styles.modalContainer}>
               <View style={styles.modalContent}>
                 <Text style={styles.modalTitle}>Choisir un délai de notification</Text>
                 <Text style={styles.modalSubtitle}>Événement: {selectedEvent.name}</Text>
 
-                <Pressable
-                  style={styles.modalButton}
-                  onPress={() => scheduleNotification(selectedEvent, 10)}
-                >
+                <Pressable style={styles.modalButton} onPress={() => scheduleNotification(selectedEvent, 10)}>
                   <Text style={styles.modalButtonText}>10 minutes avant</Text>
                 </Pressable>
-                <Pressable
-                  style={styles.modalButton}
-                  onPress={() => scheduleNotification(selectedEvent, 15)}
-                >
+                <Pressable style={styles.modalButton} onPress={() => scheduleNotification(selectedEvent, 15)}>
                   <Text style={styles.modalButtonText}>15 minutes avant</Text>
                 </Pressable>
-                <Pressable
-                  style={styles.modalButton}
-                  onPress={() => scheduleNotification(selectedEvent, 60)}
-                >
+                <Pressable style={styles.modalButton} onPress={() => scheduleNotification(selectedEvent, 60)}>
                   <Text style={styles.modalButtonText}>1 heure avant</Text>
                 </Pressable>
 
-                <Pressable
-                  style={[styles.modalButton, styles.cancelButton]}
-                  onPress={() => setModalVisible(false)}
-                >
+                <Pressable style={[styles.modalButton, styles.cancelButton]} onPress={() => setModalVisible(false)}>
                   <Text style={styles.modalButtonText}>Annuler</Text>
                 </Pressable>
               </View>
             </View>
           </Modal>
         )}
+
+        {/* Custom Alert Modal */}
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={customAlert.visible}
+          onRequestClose={closeCustomAlert}
+        >
+          <View style={styles.alertContainer}>
+            <View style={styles.alertBox}>
+              <Text style={styles.alertTitle}>{customAlert.title}</Text>
+              <Text style={styles.alertMessage}>{customAlert.message}</Text>
+              <Pressable style={styles.alertButton} onPress={closeCustomAlert}>
+                <Text style={styles.alertButtonText}>OK</Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
       </ScrollView>
     </View>
   );
@@ -237,7 +281,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   eventItemDisabled: {
-    backgroundColor: '#2E2E2E',
+    opacity: 0.3,
+    backgroundColor: '#BEB8AC',
   },
   eventName: {
     fontSize: 16,
@@ -255,12 +300,16 @@ const styles = StyleSheet.create({
     color: '#aaa',
     fontFamily: "Poppins"
   },
+  bellIcon: {
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
   eventTextDisabled: {
     color: '#555',
     fontFamily: "Poppins"
   },
   testButton: {
-    backgroundColor: '#009EE2', // Changement de couleur
+    backgroundColor: '#009EE2',
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
@@ -269,6 +318,15 @@ const styles = StyleSheet.create({
   testButtonText: {
     color: '#fff',
     fontWeight: 'bold',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#000',  // Utilise un fond noir pour que le texte blanc soit visible
+  },
+  loadingText: {
+    color: '#fff',  // Utilise du noir à la place du blanc
   },
   modalContainer: {
     flex: 1,
@@ -299,7 +357,7 @@ const styles = StyleSheet.create({
     width: '100%',
     padding: 15,
     borderRadius: 10,
-    backgroundColor: '#009EE2', // Utilisation du bleu spécifié
+    backgroundColor: '#009EE2',
     alignItems: 'center',
     marginBottom: 10,
   },
@@ -310,5 +368,40 @@ const styles = StyleSheet.create({
   },
   cancelButton: {
     backgroundColor: '#FF3B30',
+  },
+  alertContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  alertBox: {
+    width: 280,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    padding: 20,
+    alignItems: 'center',
+  },
+  alertTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#333',
+  },
+  alertMessage: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  alertButton: {
+    backgroundColor: '#009EE2',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  alertButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });
