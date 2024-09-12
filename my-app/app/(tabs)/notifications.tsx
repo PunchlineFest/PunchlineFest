@@ -81,7 +81,7 @@ export default function NotificationsScreen() {
     try {
       const response = await fetch(`${API_BASE}/events`);
       const data = await response.json();
-      setEvents(data);
+      setEvents(JSON.parse(data));
       setLoading(false);
     } catch (error) {
       console.error('Erreur lors de la récupération des événements:', error);

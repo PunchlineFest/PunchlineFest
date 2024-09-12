@@ -21,7 +21,7 @@ export default function CalendarScreen() {
     try {
       const response = await axios.get(`${API_BASE}/event/${id}`);
       if (response.data) {
-        setEvent(response.data);
+        setEvent(JSON.parse(response.data));
         setIsLoading(false);
       }
     } catch (error) {

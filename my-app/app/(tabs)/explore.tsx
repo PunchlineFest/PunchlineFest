@@ -250,7 +250,7 @@ export default () => {
 
     try {
         const response = await axios.get(API_BASE + '/events' + queryParams);
-        setEvents(response.data); // Mettre à jour les événements dans le state
+        setEvents(JSON.parse(response.data)); // Mettre à jour les événements dans le state
     } catch (error) {
       console.error('Erreur lors de la récupération des événements', error);
     }
