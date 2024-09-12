@@ -13,6 +13,7 @@ export default function TabLayout() {
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
+        tabBarShowLabel: false,
       }}>
       {/* Home Tab */}
       <Tabs.Screen
@@ -57,6 +58,15 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'notifications' : 'notifications-outline'} color={color} />
           ),
+        }}
+      />
+
+      {/* Notifications Tab */}
+      <Tabs.Screen
+        name="calendar/[id]"
+        options={{
+          headerShown: false,
+          href: null
         }}
       />
     </Tabs>
