@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, Switch, ScrollView, TouchableOpacity, Modal, Pr
 import * as Notifications from 'expo-notifications';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { API_BASE } from '@/config/env';
-
 // Configuration pour afficher les notifications même en foreground
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -12,7 +11,6 @@ Notifications.setNotificationHandler({
     shouldSetBadge: false,
   }),
 });
-
 export default function NotificationsScreen() {
   const [isReminderEnabled, setIsReminderEnabled] = useState(false);
   const [events, setEvents] = useState([]);
@@ -22,7 +20,6 @@ export default function NotificationsScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [reminders, setReminders] = useState({});
   const [customAlert, setCustomAlert] = useState({ visible: false, title: '', message: '' });
-
   const requestNotificationPermission = async () => {
     const { status } = await Notifications.requestPermissionsAsync();
     if (status !== 'granted') {
@@ -31,28 +28,22 @@ export default function NotificationsScreen() {
     }
     return true;
   };
-
   const showCustomAlert = (title, message) => {
     setCustomAlert({ visible: true, title, message });
   };
-
   const closeCustomAlert = () => {
     setCustomAlert({ visible: false, title: '', message: '' });
   };
-
   const scheduleNotification = async (event, delayInMinutes) => {
     const hasPermission = await requestNotificationPermission();
     if (!hasPermission) return;
-
     const eventTime = new Date(event.date).getTime();
     const currentTime = new Date().getTime();
     const triggerTime = eventTime - delayInMinutes * 60 * 1000;
-
     if (triggerTime <= currentTime) {
       showCustomAlert("Erreur", "Le délai choisi est trop court.");
       return;
     }
-
     await Notifications.scheduleNotificationAsync({
       content: {
         title: `Rappel pour l'événement : ${event.name}`,
@@ -68,14 +59,11 @@ export default function NotificationsScreen() {
     }).catch((error) => {
       console.error("Erreur lors de la planification de la notification", error);
     });
-
     setModalVisible(false);
   };
-
   const scheduleTestNotification = async () => {
     const hasPermission = await requestNotificationPermission();
     if (!hasPermission) return;
-
     await Notifications.scheduleNotificationAsync({
       content: {
         title: 'Test Notification',
@@ -88,9 +76,7 @@ export default function NotificationsScreen() {
       console.error("Erreur lors de la planification de la notification", error);
     });
   };
-
   const toggleSwitch = () => setIsReminderEnabled(previousState => !previousState);
-
   const fetchEvents = async () => {
     try {
       const response = await fetch(`${API_BASE}/events`);
@@ -102,21 +88,17 @@ export default function NotificationsScreen() {
       setLoading(false);
     }
   };
-
   const onRefresh = async () => {
     setRefreshing(true);
     await fetchEvents();
     setRefreshing(false);
   };
-
   useEffect(() => {
     fetchEvents();
   }, []);
-
   const chooseReminderTime = (event) => {
     const eventTime = new Date(event.date).getTime();
     const currentTime = new Date().getTime();
-
     if (eventTime < currentTime) {
       showCustomAlert("Événement terminé", "Cet évènement est déjà fini :(");
     } else {
@@ -124,7 +106,6 @@ export default function NotificationsScreen() {
       setModalVisible(true);
     }
   };
-
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -132,7 +113,6 @@ export default function NotificationsScreen() {
       </View>
     );
   }
-
   return (
     <View style={styles.container}>
       <ScrollView
@@ -147,7 +127,6 @@ export default function NotificationsScreen() {
             Pour ne rater aucun évènement, activer les notifications sur vos évènements favoris !
           </Text>
         </View>
-
         <View style={styles.notificationToggle}>
           <Text style={styles.toggleText}>Activer les rappels</Text>
           <Switch
@@ -158,7 +137,6 @@ export default function NotificationsScreen() {
             value={isReminderEnabled}
           />
         </View>
-
         {events.map(event => (
           <TouchableOpacity
             key={event.id}
@@ -180,18 +158,15 @@ export default function NotificationsScreen() {
             )}
           </TouchableOpacity>
         ))}
-
         <TouchableOpacity style={styles.testButton} onPress={scheduleTestNotification}>
           <Text style={styles.testButtonText}>Recevoir une notification de test</Text>
         </TouchableOpacity>
-
         {selectedEvent && (
           <Modal animationType="slide" transparent={true} visible={modalVisible} onRequestClose={() => setModalVisible(false)}>
             <View style={styles.modalContainer}>
               <View style={styles.modalContent}>
                 <Text style={styles.modalTitle}>Choisir un délai de notification</Text>
                 <Text style={styles.modalSubtitle}>Événement: {selectedEvent.name}</Text>
-
                 <Pressable style={styles.modalButton} onPress={() => scheduleNotification(selectedEvent, 10)}>
                   <Text style={styles.modalButtonText}>10 minutes avant</Text>
                 </Pressable>
@@ -201,7 +176,6 @@ export default function NotificationsScreen() {
                 <Pressable style={styles.modalButton} onPress={() => scheduleNotification(selectedEvent, 60)}>
                   <Text style={styles.modalButtonText}>1 heure avant</Text>
                 </Pressable>
-
                 <Pressable style={[styles.modalButton, styles.cancelButton]} onPress={() => setModalVisible(false)}>
                   <Text style={styles.modalButtonText}>Annuler</Text>
                 </Pressable>
@@ -209,7 +183,6 @@ export default function NotificationsScreen() {
             </View>
           </Modal>
         )}
-
         {/* Custom Alert Modal */}
         <Modal
           animationType="fade"
@@ -231,7 +204,6 @@ export default function NotificationsScreen() {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -250,7 +222,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: "PoppinsBold",
     marginBottom: 10,
     color: '#333',
   },
@@ -258,6 +230,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
     lineHeight: 20,
+    fontFamily: "Poppins",
   },
   notificationToggle: {
     flexDirection: 'row',
@@ -271,6 +244,7 @@ const styles = StyleSheet.create({
   toggleText: {
     fontSize: 16,
     color: '#333',
+    fontFamily: "Poppins",
   },
   eventItem: {
     backgroundColor: '#1C1C1E',
@@ -284,22 +258,28 @@ const styles = StyleSheet.create({
   },
   eventName: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'PoppinsBold',
     color: '#fff',
   },
   eventDetails: {
     fontSize: 14,
     color: '#ccc',
     marginVertical: 5,
+    fontFamily: "Poppins",
   },
   eventDate: {
     fontSize: 12,
     color: '#aaa',
+    fontFamily: "Poppins",
   },
   bellIcon: {
     position: 'absolute',
     bottom: 10,
     right: 10,
+  },
+  eventTextDisabled: {
+    color: '#555',
+    fontFamily: "Poppins",
   },
   testButton: {
     backgroundColor: '#009EE2',
@@ -338,11 +318,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
+    fontFamily: "Poppins",
   },
   modalSubtitle: {
     fontSize: 16,
     marginBottom: 20,
     color: '#333',
+    fontFamily: "Poppins",
   },
   modalButton: {
     width: '100%',
@@ -355,6 +337,7 @@ const styles = StyleSheet.create({
   modalButtonText: {
     color: '#fff',
     fontWeight: 'bold',
+    fontFamily: "Poppins",
   },
   cancelButton: {
     backgroundColor: '#FF3B30',
