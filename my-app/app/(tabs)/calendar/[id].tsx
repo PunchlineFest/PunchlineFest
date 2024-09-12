@@ -4,7 +4,6 @@ import {PageHeader} from "@/components/PageHeader";
 import {useLocalSearchParams } from 'expo-router';
 import {API_BASE} from "@/config/env";
 import axios from "axios";
-import {fixed} from "ansi-fragments";
 import {formatDate} from "@/utils/formatted";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import {BackgroundTitle} from "@/components/BackgroundTitle";
@@ -14,17 +13,11 @@ import {InlineFlashError} from "@/components/InlineFlashError";
 const image = require('../../../assets/images/nfs-project-background.png');
 const avatar = require('../../../assets/images/avatar.png');
 
-type CommentValue = {
-  name: string,
-  content: string,
-  authorId: string|number
-}
-
 export default function CalendarScreen() {
   const { id } = useLocalSearchParams();
-  const [event, setEvent] = React.useState<any>([]);
+  const [event, setEvent] = React.useState<Evenement>();
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
-  const [comments, setComments] = React.useState<any[]>([]);
+  const [comments, setComments] = React.useState<Commentaire[]>([]);
   const [error, setError] = React.useState<string|null>(null);
 
   const fetchEvent = async (id: string | string[]) => {
@@ -64,7 +57,7 @@ export default function CalendarScreen() {
           <PageHeader isLogo={true} />
         </View>
         <ScrollView>
-          { !isLoading ?
+          { event && !isLoading ?
             <View style={styles.detailContainer}>
               <Image source={avatar} resizeMode={"cover"} style={styles.avatarImage}/>
               <MaterialCommunityIcons name="heart-multiple-outline" size={38} color="black" />
@@ -72,7 +65,7 @@ export default function CalendarScreen() {
               <View>
                 <Text style={styles.title}>{event.name}</Text>
                 <View style={styles.pillContainer}>
-                  <Text style={styles.pill}>{formatDate(event.date, 'DD/MM - HH:mm')}</Text>
+                  <Text style={styles.pill}>{formatDate(event.date.toString(), 'DD/MM - HH:mm')}</Text>
                   <Text style={styles.pill}>{event.type}</Text>
                 </View>
               </View>
@@ -88,7 +81,7 @@ export default function CalendarScreen() {
                 <BackgroundTitle label={"Intervenants"} />
                 <View style={{marginBottom:59}}>
                   {
-                    (event.artists || []).map((artist: any, index: number) => (
+                    (event?.artists || []).map((artist: any, index: number) => (
                       <View key={index}>
                         <Text style={{fontFamily:"BebasNeue", marginTop:10}}>{artist.name}</Text>
                         <Text style={styles.text}>{artist.description}</Text>

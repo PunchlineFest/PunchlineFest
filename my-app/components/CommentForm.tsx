@@ -3,7 +3,7 @@ import {View, Text, TextInput, Button, Alert, StyleSheet, TouchableOpacity} from
 import {API_BASE} from "@/config/env";
 import axios from "axios";
 
-export default function CommentForm({ eventId, setComments }: { eventId: string | string[], setComments:  React.Dispatch<React.SetStateAction<any[]>> }) {
+export default function CommentForm({ eventId, setComments }: { eventId: string | string[], setComments:  React.Dispatch<React.SetStateAction<Commentaire[]>> }) {
   const [name, setName] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);

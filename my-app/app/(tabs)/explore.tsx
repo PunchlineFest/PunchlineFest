@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Ionicons from '@expo/vector-icons/Ionicons';
 import { StyleSheet, View } from 'react-native';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import axios from 'axios';
@@ -236,7 +235,7 @@ const mapStyle = [
 ];
 
 export default () => {
-  const [events, setEvents] = useState([]); // État pour stocker les événements
+  const [events, setEvents] = useState<Evenement[]>([]); // État pour stocker les événements
   const [searchTerm, setSearchTerm] = React.useState<string>('');
   const [submittedSearchTerm, setSubmittedSearchTerm] = React.useState<string>('');
 
