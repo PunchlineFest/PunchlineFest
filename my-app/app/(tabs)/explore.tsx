@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import {StyleSheet, TouchableOpacity, View, Text} from 'react-native';
+import MapView, { Marker, PROVIDER_GOOGLE, Callout } from 'react-native-maps';
 import axios from 'axios';
 import {API_BASE} from "@/config/env";
 import {PageHeader} from "@/components/PageHeader";
+import {useRouter} from "expo-router";
 
 const styles = StyleSheet.create({
   container: {
@@ -16,6 +17,13 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     fontFamily: "Poppins"
   },
+  callout: {},
+  title: {
+    fontFamily: "BebasNeue"
+  },
+  text: {
+    fontFamily: "Poppins"
+  }
 });
 
 const mapStyle = [
@@ -239,6 +247,8 @@ export default () => {
   const [searchTerm, setSearchTerm] = React.useState<string>('');
   const [submittedSearchTerm, setSubmittedSearchTerm] = React.useState<string>('');
 
+  const router = useRouter();
+
   const handleSearchSubmit = () => {
     setSubmittedSearchTerm(searchTerm); // Met à jour le terme de recherche soumis
   };
@@ -285,9 +295,12 @@ export default () => {
               latitude: event.coordinates[0],
               longitude: event.coordinates[1],
             }}
-            title={event.name}
-            description={event.description}
-          />
+          >
+            <Callout onPress={() => router.push(`/calendar/${event.id}`)} style={{paddingHorizontal: 5, width:200}}>
+              <Text style={styles.title}>{event.name}</Text>
+              <Text style={styles.text}>{event.description}</Text>
+            </Callout>
+          </Marker>
         ))}
       </MapView>
     </View>
