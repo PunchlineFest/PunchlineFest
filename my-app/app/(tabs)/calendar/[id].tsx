@@ -49,7 +49,7 @@ export default function CalendarScreen() {
               <View>
                 <Text style={styles.title}>{event.name}</Text>
                 <View style={styles.pillContainer}>
-                  <Text style={styles.pill}>{formatDate(event.date)}</Text>
+                  <Text style={styles.pill}>{formatDate(event.date, 'DD/MM - HH:mm')}</Text>
                   <Text style={styles.pill}>{event.type}</Text>
                 </View>
               </View>
@@ -78,7 +78,7 @@ export default function CalendarScreen() {
               <View>
                 <BackgroundTitle label={"Avis"} />
                 <View style={{marginBottom:59}}>
-                  <Text style={styles.text}>A venir</Text>
+                  <Text style={styles.text}>... A venir ...</Text>
                 </View>
               </View>
             </View>

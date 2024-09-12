@@ -80,9 +80,11 @@ export default function CalendarScreen() {
                           <View>
                             <TouchableOpacity
                               key={element.id}
+                              style={{flexDirection: "row", alignItems:"center"}}
                               onPress={() => router.push(`/calendar/${element.id}`)} // Redirige vers la page de détail de l'activité
                             >
                               <Text style={styles.collapsibleTitle}>{element.name}</Text>
+                              <Ionicons name="search" size={16} style={{marginLeft:5}} />
                             </TouchableOpacity>
                             <Text style={styles.collapsibleTag}>{element.type}</Text>
                             <StatusBadge date={key} />
