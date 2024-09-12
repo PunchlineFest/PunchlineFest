@@ -1,6 +1,7 @@
-import {GestureResponderEvent, Image, StyleSheet, TextInput, View} from "react-native";
+import {GestureResponderEvent, Image, StyleSheet, TextInput, TouchableOpacity, View} from "react-native";
 import {Ionicons} from "@expo/vector-icons";
 import React from "react";
+import { useNavigation } from '@react-navigation/native';
 
 const logo = require('../assets/images/logo-white.png');
 
@@ -8,24 +9,34 @@ export const PageHeader = ({
    value,
    onChangeText,
    handleSearchSubmit,
-   isLogo = false
+   isLogo = false,
+   isMap = false
 }: {
   value?: string | undefined,
   onChangeText?: ((text: string) => void) | undefined,
   handleSearchSubmit?: ((event: GestureResponderEvent) => void) | undefined,
-  isLogo?: boolean
+  isLogo?: boolean,
+  isMap?: boolean
 }) => {
+  const navigation = useNavigation();
+
+  const handleBackPress = () => {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+    }
+  };
+
   return (
     <View style={[
-      styles.headerContainer,
+      isMap ? styles.headerContainerOnMap : styles.headerContainer,
       {
         justifyContent: isLogo ? "flex-start" : "space-between",
         paddingBottom: isLogo ? 20 : 5
       },
     ]}>
-      <View style={styles.arrowButton}>
+      <TouchableOpacity style={styles.arrowButton} onPress={handleBackPress}>
         <Ionicons name="chevron-back" size={30} style={styles.headerIcon} />
-      </View>
+      </TouchableOpacity>
       {
         isLogo ? (
             <View style={styles.logo}>
@@ -51,6 +62,13 @@ const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: 'row',
     alignItems: "center",
+  },
+  headerContainerOnMap: {
+    flexDirection: 'row',
+    alignItems: "center",
+    position: 'absolute', // Position absolue pour que le header soit au-dessus de la carte
+    top: 50, // En haut de l'écran
+    zIndex: 1,
   },
   headerIcon: {
     color: "#000",
