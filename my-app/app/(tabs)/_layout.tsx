@@ -59,6 +59,15 @@ export default function TabLayout() {
           ),
         }}
       />
+
+      {/* Notifications Tab */}
+      <Tabs.Screen
+        name="calendar/[id]"
+        options={{
+          headerShown: false,
+          href: null
+        }}
+      />
     </Tabs>
   );
 }
