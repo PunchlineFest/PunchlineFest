@@ -44,16 +44,6 @@ export default function HomeScreen() {
           </View>
         </View>
 
-        {/* Search Bar */}
-        <View style={styles.searchContainer}>
-          <Ionicons name="search" size={20} color="#666" style={styles.searchIcon} />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Rechercher"
-            placeholderTextColor="#666"
-          />
-        </View>
-
         {/* Concert Image */}
         <View style={styles.concertContainer}>
           <Image source={require('../../assets/images/concert.png')} style={styles.concertImage} />
