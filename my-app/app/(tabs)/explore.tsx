@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Ionicons from '@expo/vector-icons/Ionicons';
 import { StyleSheet, View } from 'react-native';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import axios from 'axios';
@@ -236,7 +235,7 @@ const mapStyle = [
 ];
 
 export default () => {
-  const [events, setEvents] = useState([]); // État pour stocker les événements
+  const [events, setEvents] = useState<Evenement[]>([]); // État pour stocker les événements
   const [searchTerm, setSearchTerm] = React.useState<string>('');
   const [submittedSearchTerm, setSubmittedSearchTerm] = React.useState<string>('');
 
@@ -250,7 +249,7 @@ export default () => {
 
     try {
         const response = await axios.get(API_BASE + '/events' + queryParams);
-        setEvents(response.data); // Mettre à jour les événements dans le state
+        setEvents(JSON.parse(response.data)); // Mettre à jour les événements dans le state
     } catch (error) {
       console.error('Erreur lors de la récupération des événements', error);
     }

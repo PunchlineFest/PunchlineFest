@@ -8,15 +8,18 @@ import FilterPills from "@/components/FilterPills";
 import {PageHeader} from "@/components/PageHeader";
 import axios from "axios";
 import {API_BASE} from "@/config/env";
-import {useFonts} from "expo-font";
 import {router} from "expo-router";
 
 const filterLabels = ["Concert", "Atelier", "Conférence", "Stand", "Restaurant"]
 
 const image = require('../../assets/images/nfs-project-background.png');
 
+type EventsByDate = {
+  [date: string]: Evenement[];
+};
+
 export default function CalendarScreen() {
-  const [events, setEvents] = React.useState<any[]>([]);
+  const [events, setEvents] = React.useState<EventsByDate>({});
   const [selectedFilters, setSelectedFilters] = React.useState<string[]>([]);
   const [searchTerm, setSearchTerm] = React.useState<string>('');
   const [submittedSearchTerm, setSubmittedSearchTerm] = React.useState<string>('');
@@ -43,10 +46,9 @@ export default function CalendarScreen() {
     ].filter(Boolean).join('&');
 
     try {
-      console.log(`${API_BASE}/events/grouped-by-date?${queryParams}`)
       const response = await axios.get(`${API_BASE}/events/grouped-by-date?${queryParams}`);
       if (response.data) {
-        setEvents(response.data);
+        setEvents(JSON.parse(response.data));
         setIsLoading(false);
       }
     } catch (error) {

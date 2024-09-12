@@ -1,27 +1,30 @@
 import React from 'react';
-import {View, Text, StyleSheet, ImageBackground, ScrollView, ActivityIndicator, Image} from 'react-native';
+import {View, Text, StyleSheet, ImageBackground, ScrollView, ActivityIndicator, Image, TextInput} from 'react-native';
 import {PageHeader} from "@/components/PageHeader";
 import {useLocalSearchParams } from 'expo-router';
 import {API_BASE} from "@/config/env";
 import axios from "axios";
-import {fixed} from "ansi-fragments";
 import {formatDate} from "@/utils/formatted";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import {BackgroundTitle} from "@/components/BackgroundTitle";
+import CommentForm from "@/components/CommentForm";
+import {InlineFlashError} from "@/components/InlineFlashError";
 
 const image = require('../../../assets/images/nfs-project-background.png');
 const avatar = require('../../../assets/images/avatar.png');
 
 export default function CalendarScreen() {
   const { id } = useLocalSearchParams();
-  const [event, setEvent] = React.useState<any>([]);
+  const [event, setEvent] = React.useState<Evenement>();
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
+  const [comments, setComments] = React.useState<Commentaire[]>([]);
+  const [error, setError] = React.useState<string|null>(null);
 
   const fetchEvent = async (id: string | string[]) => {
     try {
       const response = await axios.get(`${API_BASE}/event/${id}`);
       if (response.data) {
-        setEvent(response.data);
+        setEvent(JSON.parse(response.data));
         setIsLoading(false);
       }
     } catch (error) {
@@ -29,8 +32,21 @@ export default function CalendarScreen() {
     }
   }
 
+  const fetchEventComments = async (id: string | string[]) => {
+    try {
+      const response = await axios.get(`${API_BASE}/comments?eventId=${id}`);
+      if (response.data) {
+        setComments(JSON.parse(response.data))
+      }
+    } catch (error) {
+      setError("Une erreur est survenue lors du chargement des commentaires")
+      console.error('Une erreur est survenue', error);
+    }
+  }
+
   React.useEffect(() => {
     fetchEvent(id);
+    fetchEventComments(id);
   }, [id]);
 
   return (
@@ -41,7 +57,7 @@ export default function CalendarScreen() {
           <PageHeader isLogo={true} />
         </View>
         <ScrollView>
-          { !isLoading ?
+          { event && !isLoading ?
             <View style={styles.detailContainer}>
               <Image source={avatar} resizeMode={"cover"} style={styles.avatarImage}/>
               <MaterialCommunityIcons name="heart-multiple-outline" size={38} color="black" />
@@ -49,7 +65,7 @@ export default function CalendarScreen() {
               <View>
                 <Text style={styles.title}>{event.name}</Text>
                 <View style={styles.pillContainer}>
-                  <Text style={styles.pill}>{formatDate(event.date, 'DD/MM - HH:mm')}</Text>
+                  <Text style={styles.pill}>{formatDate(event.date.toString(), 'DD/MM - HH:mm')}</Text>
                   <Text style={styles.pill}>{event.type}</Text>
                 </View>
               </View>
@@ -65,7 +81,7 @@ export default function CalendarScreen() {
                 <BackgroundTitle label={"Intervenants"} />
                 <View style={{marginBottom:59}}>
                   {
-                    (event.artists || []).map((artist: any, index: number) => (
+                    (event?.artists || []).map((artist: any, index: number) => (
                       <View key={index}>
                         <Text style={{fontFamily:"BebasNeue", marginTop:10}}>{artist.name}</Text>
                         <Text style={styles.text}>{artist.description}</Text>
@@ -75,11 +91,28 @@ export default function CalendarScreen() {
                 </View>
               </View>
               {/* AVIS */}
-              <View>
+              <View style={{marginBottom:30}}>
                 <BackgroundTitle label={"Avis"} />
-                <View style={{marginBottom:59}}>
-                  <Text style={styles.text}>... A venir ...</Text>
-                </View>
+                {
+                  !error ? (
+                    <>
+                        {
+                          (comments || []).map((comment: any, index: number) => (
+                            <View key={index}>
+                              <Text style={{fontFamily:"BebasNeue"}}>{comment.author} a dit :</Text>
+                              <Text style={styles.content}>{comment.content}</Text>
+                              <Text style={styles.date}>Le {formatDate(comment.createdAt, 'DD/MM/YYYY - HH:mm')}</Text>
+                            </View>
+                          ))
+                        }
+                        <View>
+                          <CommentForm eventId={id} setComments={setComments} />
+                        </View>
+                    </>
+                  ) : (
+                    <InlineFlashError message={error} />
+                  )
+                }
               </View>
             </View>
              : <ActivityIndicator size="large" color="#0000ff" />
@@ -146,4 +179,12 @@ const styles = StyleSheet.create({
     marginRight: 10,
     fontSize: 12
   },
+  content: {
+    fontFamily: "Poppins",
+    fontSize: 12
+  },
+  date: {
+    fontFamily: "Poppins",
+    fontSize: 10
+  }
 });

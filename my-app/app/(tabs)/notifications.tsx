@@ -13,7 +13,7 @@ Notifications.setNotificationHandler({
 });
 export default function NotificationsScreen() {
   const [isReminderEnabled, setIsReminderEnabled] = useState(false);
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState<Evenement[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -34,7 +34,7 @@ export default function NotificationsScreen() {
   const closeCustomAlert = () => {
     setCustomAlert({ visible: false, title: '', message: '' });
   };
-  const scheduleNotification = async (event, delayInMinutes) => {
+  const scheduleNotification = async (event: Evenement, delayInMinutes) => {
     const hasPermission = await requestNotificationPermission();
     if (!hasPermission) return;
     const eventTime = new Date(event.date).getTime();
@@ -67,7 +67,7 @@ export default function NotificationsScreen() {
     try {
       const response = await fetch(`${API_BASE}/events`);
       const data = await response.json();
-      setEvents(data);
+      setEvents(JSON.parse(data));
       setLoading(false);
     } catch (error) {
       console.error('Erreur lors de la récupération des événements:', error);
