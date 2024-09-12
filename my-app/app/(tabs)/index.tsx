@@ -10,6 +10,7 @@ export default function HomeScreen() {
   // Charger les polices
   let [fontsLoaded] = useFonts({
     'BebasNeue': require('../../assets/fonts/BebasNeue-Regular.ttf'),
+    'Poppins': require('../../assets/fonts/PoppinsRegular-B2Bw.otf')
   });
 
   // Si la police n'est pas encore chargée, afficher AppLoading
@@ -81,9 +82,7 @@ export default function HomeScreen() {
             </Text>
 
             {/* Bouton fléché à droite */}
-            <TouchableOpacity style={styles.arrowButton}>
-              <Ionicons name="chevron-forward" size={24} color="black" />
-            </TouchableOpacity>
+
           </View>
         </View>
 

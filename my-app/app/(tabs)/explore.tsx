@@ -3,6 +3,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { StyleSheet, View } from 'react-native';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import axios from 'axios';
+import {API_BASE} from "@/config/env";
 
 const styles = StyleSheet.create({
   container: {
@@ -22,7 +23,7 @@ export default () => {
   // Fonction pour récupérer les données de l'API
   const fetchEvents = async () => {
     try {
-        const response = await axios.get('http://172.16.2.198:8000/api/events');
+        const response = await axios.get(API_BASE + '/events');
         setEvents(response.data); // Mettre à jour les événements dans le state
     } catch (error) {
       console.error('Erreur lors de la récupération des événements', error);
