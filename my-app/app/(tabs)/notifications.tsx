@@ -1,6 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Switch, ScrollView, TouchableOpacity, Alert, Modal, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Switch, ScrollView, TouchableOpacity, Alert, Modal, Pressable, RefreshControl } from 'react-native';
 import * as Notifications from 'expo-notifications';
+import { API_BASE } from '@/config/env';
+
+// Configuration pour afficher les notifications même en foreground
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,  // Affiche une alerte lorsque l'application est en foreground
+    shouldPlaySound: true,  // Joue un son si nécessaire
+    shouldSetBadge: false,  // Ne met pas à jour l'icône de badge par défaut
+  }),
+});
 
 export default function NotificationsScreen() {
   const [isReminderEnabled, setIsReminderEnabled] = useState(false);
@@ -8,6 +18,7 @@ export default function NotificationsScreen() {
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [refreshing, setRefreshing] = useState(false); // État pour le rafraîchissement
 
   // Fonction pour demander les permissions de notification
   const requestNotificationPermission = async () => {
@@ -18,6 +29,8 @@ export default function NotificationsScreen() {
     }
     return true;
   };
+
+
 
   // Fonction pour programmer une notification
   const scheduleNotification = async (event, delayInMinutes) => {
@@ -45,7 +58,6 @@ export default function NotificationsScreen() {
         `Vous recevrez une notification ${delayInMinutes} minutes avant le début de ${event.name}.`, // Message de l'alerte
         [{ text: "OK" }] // Bouton OK pour fermer l'alerte
       );
-      
     }).catch((error) => {
       console.error("Erreur lors de la planification de la notification", error);
     });
@@ -53,25 +65,48 @@ export default function NotificationsScreen() {
     setModalVisible(false);
   };
 
-  
+  // Fonction pour programmer une notification de test
+  const scheduleTestNotification = async () => {
+    const hasPermission = await requestNotificationPermission();
+    if (!hasPermission) return;
+
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: 'Test Notification',
+        body: 'Ceci est une notification de test.',
+      },
+      trigger: { seconds: 5 }, // Délai de 5 secondes avant l'apparition de la notification
+    }).then(() => {
+      console.log("Notification programmée avec succès !");
+    }).catch((error) => {
+      console.error("Erreur lors de la planification de la notification", error);
+    });
+  };
 
   // Fonction pour activer ou désactiver les notifications
   const toggleSwitch = () => setIsReminderEnabled(previousState => !previousState);
 
   // Fonction pour récupérer les événements depuis l'API
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const response = await fetch('http://172.16.2.198:8000/api/events');
-        const data = await response.json();
-        setEvents(data);
-        setLoading(false);
-      } catch (error) {
-        console.error('Erreur lors de la récupération des événements:', error);
-        setLoading(false);
-      }
-    };
+  const fetchEvents = async () => {
+    try {
+      const response = await fetch(`${API_BASE}/events`);
+      const data = await response.json();
+      setEvents(data);
+      setLoading(false);
+    } catch (error) {
+      console.error('Erreur lors de la récupération des événements:', error);
+      setLoading(false);
+    }
+  };
 
+  // Fonction pour le rafraîchissement
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchEvents();
+    setRefreshing(false);
+  };
+
+  useEffect(() => {
     fetchEvents();
   }, []);
 
@@ -99,7 +134,12 @@ export default function NotificationsScreen() {
 
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Rappels pour les événements</Text>
           <Text style={styles.sectionText}>
@@ -124,10 +164,10 @@ export default function NotificationsScreen() {
             key={event.id}
             style={[
               styles.eventItem,
-              !isReminderEnabled && styles.eventItemDisabled // Appliquer les styles grisés si l'option est désactivée
+              !isReminderEnabled && styles.eventItemDisabled
             ]}
-            onPress={() => isReminderEnabled && chooseReminderTime(event)} // Permet de cliquer uniquement si l'option est activée
-            disabled={!isReminderEnabled} // Désactiver le clic si l'option est désactivée
+            onPress={() => isReminderEnabled && chooseReminderTime(event)}
+            disabled={!isReminderEnabled}
           >
             <Text style={[styles.eventName, !isReminderEnabled && styles.eventTextDisabled]}>
               {event.name}
@@ -140,6 +180,14 @@ export default function NotificationsScreen() {
             </Text>
           </TouchableOpacity>
         ))}
+
+        {/* Bouton pour tester la notification */}
+        <TouchableOpacity
+          style={styles.testButton}
+          onPress={scheduleTestNotification}
+        >
+          <Text style={styles.testButtonText}>Recevoir une notification de test</Text>
+        </TouchableOpacity>
 
         {/* Modal pour choisir le délai de notification */}
         {selectedEvent && (
@@ -255,7 +303,7 @@ const styles = StyleSheet.create({
     color: '#555',
   },
   testButton: {
-    backgroundColor: '#009EE2', // Changement de couleur
+    backgroundColor: '#009EE2',
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
@@ -292,7 +340,7 @@ const styles = StyleSheet.create({
     width: '100%',
     padding: 15,
     borderRadius: 10,
-    backgroundColor: '#009EE2', // Utilisation du bleu spécifié
+    backgroundColor: '#009EE2',
     alignItems: 'center',
     marginBottom: 10,
   },
