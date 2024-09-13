@@ -91,7 +91,7 @@ export default function CalendarScreen() {
                               <Ionicons name="search" size={16} style={{marginLeft:5}} />
                             </TouchableOpacity>
                             <Text style={styles.collapsibleTag}>{element.type}</Text>
-                            <StatusBadge date={key} />
+                            <StatusBadge startDate={element.startDate} endDate={element.endDate} />
                           </View>
                           <Image source={require('../../assets/images/avatar.png')}/>
                         </View>
