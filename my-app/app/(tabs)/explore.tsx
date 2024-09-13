@@ -278,7 +278,6 @@ export default () => {
         isMap={true}
       />
       <MapView
-        provider={PROVIDER_GOOGLE}
         style={styles.map}
         customMapStyle={mapStyle}
         initialRegion={{
