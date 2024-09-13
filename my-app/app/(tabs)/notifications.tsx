@@ -86,7 +86,7 @@ export default function NotificationsScreen() {
     const eventTime = new Date(event.date).getTime();
     const currentTime = new Date().getTime();
     if (eventTime < currentTime) {
-      showCustomAlert("Événement terminé", "Cet évènement est déjà fini :(");
+      showCustomAlert("Événement terminé", "Cet évènement est déjà fini 😢");
     } else {
       setSelectedEvent(event);
       setModalVisible(true);
